@@ -1,0 +1,35 @@
+{
+  "name": "Processor A",
+  "physical_qubits": 5,
+  "topology": "linear",
+  "coupling_edges_undirected": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      4
+    ]
+  ],
+  "basis_gates": [
+    "rz",
+    "sx",
+    "x",
+    "cx"
+  ],
+  "noise": {
+    "single_qubit_depolarizing": 0.001,
+    "cx_depolarizing": 0.005,
+    "readout_error": 0.01
+  },
+  "status_for_six_node_problem": "Infeasible: six logical qubits are required, but only five physical qubits are available."
+}
