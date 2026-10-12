@@ -1,69 +1,29 @@
-# Quantum Max-Cut: A Comparative Study of QAOA and Classical Optimization
+# PS-O1 — Max-Cut on Weighted Graphs with QAOA
 
-## Problem Statement
-Max-Cut is a graph optimization problem that divides vertices into two groups to maximize the number of edges connecting different groups.
+## Overview
+This project studies the weighted Max-Cut problem using a p=1 Quantum Approximate Optimization Algorithm (QAOA) circuit, exhaustive classical search, constrained transpilation, and noisy simulation.
 
-## Objective
-Explore the Max-Cut problem and compare a classical optimization baseline with the Quantum Approximate Optimization Algorithm (QAOA).
+## Reproducible configuration
+- Graph: `networkx.erdos_renyi_graph(n=6, p=0.5, seed=42)`
+- Edge weights: integers from 1 to 5, assigned using `random.Random(42)`
+- QAOA: `p=1`, `gamma=0.5`, `beta=0.25` for the main processor comparison
+- Basis gates: `rz`, `sx`, `x`, `cx`
+- Transpiler optimization level: 1; transpiler seed: 42
+- Noisy simulation: 4096 shots, simulator seed 42
+- Noise assumptions: single-qubit depolarizing error 0.001, CX depolarizing error 0.005, readout error 0.01
 
-## Technologies
-- Python
-- Qiskit
-- Qiskit Aer
-- SciPy
-- NetworkX
-- Matplotlib
-- Google Colab
+## Processor configurations
+- **Processor A:** five-qubit linear chain. The full problem requires six logical qubits, so this processor is infeasible for the full workload. No score is fabricated for it.
+- **Processor B:** nine-qubit 3x3 grid. The notebook transpiles the circuit to this coupling map and simulates it with the stated noise model.
 
-## Classical Baseline
-The example graph contains 5 vertices and 7 edges.
+## How to run
+1. Open `main.ipynb` in Google Colab or Jupyter.
+2. Run all cells from top to bottom.
+3. The notebook computes the graph, classical optimum, parameter sweep, transpilation metrics, noisy result metrics, and figures.
+4. The notebook saves generated CSV and PNG outputs in its working directory. Move/copy those outputs into `results/tables/` and `results/figures/` if running locally.
 
-The classical exhaustive-search baseline found a best cut value of 5.
-
-## Quantum Approach
-
-We constructed a parameterized QAOA circuit using Qiskit. The circuit uses Hadamard gates to initialize a superposition, RZZ gates to encode the Max-Cut cost interactions, and RX gates for the mixer operation.
-
-We evaluated the circuit using Qiskit Aer with 1,024 measurement shots per parameter setting. Four combinations of gamma and beta were tested, and the measured bitstrings were evaluated using the Max-Cut objective.
-
-The best observed QAOA sample reached a cut value of 5, matching the classical optimum for this graph.
-## How to Run
-
-1. Open `main.ipynb` in Google Colab.
-2. Run the dependency installation cell at the beginning of the notebook.
-3. Execute the remaining cells in order.
-4. Review the classical baseline, QAOA measurements, parameter sweep, and result plots.
-
-Dependencies are listed in `requirements.txt`.
+## Results interpretation
+The notebook calculates metrics from the simulation output during execution. Do not treat previous run values as guaranteed outputs until you run this exact notebook. Circuit-depth and CX-count deltas are proxies for routing overhead, not an exact SWAP count.
 
 ## Limitations
-The current classical experiment uses a small graph. Simulation results alone do not demonstrate quantum advantage.
-## Experimental Results
-
-We tested QAOA on a graph containing 5 vertices and 7 edges.
-
-### Classical Baseline
-- Best cut value found by exhaustive search: 5
-
-### QAOA Parameter Sweep
-
-We tested four parameter settings using Qiskit Aer with 1,024 measurement shots per setting.
-
-| Gamma | Beta | Average Cut Value | Best Observed Cut |
-|---:|---:|---:|---:|
-| 0.5 | 0.25 | 2.312 | 5 |
-| 1.0 | 0.50 | 2.045 | 5 |
-| 1.5 | 0.75 | 3.530 | 5 |
-| 2.0 | 1.00 | 3.643 | 5 |
-
-The highest average cut value among these tested settings was 3.643 at Gamma = 2.0 and Beta = 1.0. The best observed QAOA sample reached the classical optimum of 5.
-
-These results are from a small simulation experiment and do not establish a quantum advantage.
-
-### Parameter Sweep Plot
-
-![QAOA parameter sweep](qaoa_parameter_sweep.png)
-
-### Results Data
-
-The numerical results are available in `qaoa_parameter_results.csv`.
+The experiment uses a small graph and fixed QAOA parameters. Noise values are assumptions for simulation, not device calibration data. This experiment does not establish quantum advantage.

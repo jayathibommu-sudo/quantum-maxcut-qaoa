@@ -1,5 +1,7 @@
 qiskit
 qiskit-aer
-scipy
 networkx
+numpy
+pandas
 matplotlib
+scipy
